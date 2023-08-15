@@ -4,6 +4,7 @@ set -euo pipefail
 ARCH_AMD64=amd64
 ARCH_ARM64=arm64
 ARCH_PPC64LE=ppc64le
+ARCH_RISCV64=riscv64
 
 ARCH=${1:-$ARCH_AMD64}
 
@@ -120,6 +121,13 @@ if [[ $ARCH != "$ARCH_PPC64LE" ]]; then
     chmod +x "$TMP_BIN/conmon"
 fi
 
+# TODO: remove when conmon riscv64 releases exists
+if [[ $ARCH != "$ARCH_RISCV64" ]]; then
+    curl_to "$TMP_BIN/conmon" \
+        "https://github.com/containers/conmon/releases/download/${VERSIONS["conmon"]}/conmon.$ARCH"
+    chmod +x "$TMP_BIN/conmon"
+fi
+
 # runc
 curl_to "$TMP_BIN/runc" \
     "https://github.com/opencontainers/runc/releases/download/${VERSIONS["runc"]}/runc.$ARCH"
@@ -146,6 +154,8 @@ if [[ $ARCH == "$ARCH_ARM64" ]]; then
     ELF_ARCH=aarch64
 elif [[ $ARCH == "$ARCH_PPC64LE" ]]; then
     ELF_ARCH=PowerPC
+elif [[ $ARCH == "$ARCH_RISCV64" ]]; then
+    ELF_ARCH=riscv64
 else
     ELF_ARCH=x86-64
 fi
@@ -192,6 +202,11 @@ fi
 
 # TODO: remove when conmon ppc64le releases exists
 if [[ $ARCH == "$ARCH_PPC64LE" ]]; then
+    EXP_CNT=$((EXP_CNT - 1))
+fi
+
+# TODO: remove when conmon riscv64 releases exists
+if [[ $ARCH == "$ARCH_RISCV64" ]]; then
     EXP_CNT=$((EXP_CNT - 1))
 fi
 

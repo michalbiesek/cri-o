@@ -447,6 +447,7 @@ bundles: ${BOM}
 	contrib/bundle/build amd64
 	contrib/bundle/build arm64
 	contrib/bundle/build ppc64le
+	contrib/bundle/build riscv64
 
 get-script:
 	sed -i '/# INCLUDE/q' scripts/get

@@ -4,6 +4,7 @@ set -euo pipefail
 ARCH_AMD64=amd64
 ARCH_ARM64=arm64
 ARCH_PPC64LE=ppc64le
+ARCH_RISCV64=riscv64
 ARCH=
 VERSION=
 GITHUB_TOKEN=${GITHUB_TOKEN:-}
@@ -54,6 +55,8 @@ parse_args() {
             ARCH=$ARCH_ARM64
         elif [[ "$LOCAL_ARCH" == "$ARCH_PPC64LE" ]]; then
             ARCH=$ARCH_PPC64LE
+        elif [[ "$LOCAL_ARCH" == "$ARCH_RISCV64" ]]; then
+            ARCH=$ARCH_RISCV64
         else
             echo "Unsupported local architecture: $LOCAL_ARCH"
             exit 1

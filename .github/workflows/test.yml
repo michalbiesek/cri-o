@@ -181,6 +181,28 @@ jobs:
             result/bin/crio-status
             result/bin/pinns
 
+  build-static-riscv64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v22
+        with:
+          install_url: https://releases.nixos.org/nix/nix-${{ env.NIX_VERSION }}/install
+      - uses: cachix/cachix-action@v12
+        with:
+          name: cri-o-static
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          pushFilter: cri-o
+      - run: nix-build nix/default-riscv64.nix
+      - run: file result/bin/crio
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build-static-riscv64
+          path: |
+            result/bin/crio
+            result/bin/crio-status
+            result/bin/pinns
+
   bundles:
     runs-on: ubuntu-latest
     needs:
@@ -188,6 +210,7 @@ jobs:
       - build-static-amd64
       - build-static-arm64
       - build-static-ppc64le
+      - build-static-riscv64
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
@@ -205,6 +228,10 @@ jobs:
         with:
           name: build-static-ppc64le
           path: bin/static-ppc64le
+      - uses: actions/download-artifact@v3
+        with:
+          name: build-static-riscv64
+          path: bin/static-riscv64
       - uses: actions/download-artifact@v3
         with:
           name: docs
